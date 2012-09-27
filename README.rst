@@ -1,5 +1,16 @@
-audioread
-=========
+audioread-python3
+=================
+
+Ported parts:
+
+    - ffmpeg
+    
+Missing ports:
+
+    - gstreamer
+    - core audio
+    - pymad
+    - wave and aifc
 
 Decode audio files using whichever backend is available. The library
 currently supports:
