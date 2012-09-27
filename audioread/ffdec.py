@@ -117,21 +117,22 @@ class FFmpegAudioFile(object):
                 raise CommunicationError("stream info not found")
             line = line.strip().lower()
 
-            if 'no such file' in line:
+            if b'no such file' in line:
                 raise IOError('file not found')
-            elif 'invalid data found' in line:
+            elif b'invalid data found' in line:
                 raise UnsupportedError()
-            elif 'duration:' in line:
+            elif b'duration:' in line:
                 out_parts.append(line)
-            elif 'audio:' in line:
+            elif b'audio:' in line:
                 out_parts.append(line)
-                self._parse_info(''.join(out_parts))
+                self._parse_info(b''.join(out_parts))
                 break
 
     def _parse_info(self, s):
         """Given relevant data from the ffmpeg output, set audio
         parameter fields on this object.
         """
+        s = str(s)
         # Sample rate.
         match = re.search(r'(\d+) hz', s)
         if match:
@@ -159,7 +160,7 @@ class FFmpegAudioFile(object):
             r'duration: (\d+):(\d+):(\d+).(\d)', s
         )
         if match:
-            durparts = map(int, match.groups())
+            durparts = list(map(int, match.groups()))
             duration = durparts[0] * 60 * 60 + \
                        durparts[1] * 60 + \
                        durparts[2] + \
